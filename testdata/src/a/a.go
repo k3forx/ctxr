@@ -2,14 +2,12 @@ package a
 
 import "context"
 
-func f(ctx context.Context, id int) string {
-	return "OK"
+func f(ctx context.Context, id int, email string) error {
+	return nil
 }
 
-func g(c context.Context, id int, email string) string { // want "variable name of `context.Context` is invalid"
-	return "NG"
+func g(c context.Context, name string) (string, error) { // want "1st args of func 'g' is context.Context, and its name should be 'ctx'"
+	return "", nil
 }
 
-func h(id int, email string, ctx context.Context) string { // want "variable name of `context.Context` is invalid"
-	return "NG" // want
-}
+func h(id int, ctx context.Context) {} // want "2nd args of func 'h' is context.Context, and it should be first arg"
