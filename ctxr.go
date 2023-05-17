@@ -1,4 +1,4 @@
-package ctxRuler
+package ctxr
 
 import (
 	"go/ast"
@@ -12,11 +12,11 @@ import (
 	"golang.org/x/tools/go/ast/inspector"
 )
 
-const doc = "ctxRuler is ..."
+const doc = "ctxr is lint to check whether context.Context used in a func is passed as first arg with name of `ctx`"
 
 // Analyzer is ...
 var Analyzer = &analysis.Analyzer{
-	Name: "ctxRuler",
+	Name: "ctxr",
 	Doc:  doc,
 	Run:  run,
 	Requires: []*analysis.Analyzer{
