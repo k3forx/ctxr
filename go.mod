@@ -1,4 +1,4 @@
-module github.com/k3forx/ctxRuler
+module github.com/k3forx/ctxr
 
 go 1.18
 
