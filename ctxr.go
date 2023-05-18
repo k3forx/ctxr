@@ -31,6 +31,9 @@ func run(pass *analysis.Pass) (any, error) {
 		(*ast.FuncDecl)(nil),
 	}
 	ctxObj := analysisutil.LookupFromImports(pass.Pkg.Imports(), "context", "Context")
+	if ctxObj == nil {
+		return nil, nil
+	}
 
 	inspect.Preorder(nodeFilter, func(n ast.Node) {
 		f, ok := n.(*ast.FuncDecl)
