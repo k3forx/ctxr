@@ -4,7 +4,6 @@ import (
 	"go/ast"
 	"go/types"
 	"strconv"
-	"strings"
 
 	"github.com/gostaticanalysis/analysisutil"
 	"golang.org/x/tools/go/analysis"
@@ -41,8 +40,10 @@ func run(pass *analysis.Pass) (any, error) {
 			return
 		}
 
+		var index int
 		for i, p := range f.Type.Params.List {
 			for j := range p.Names {
+				index++
 				ident := p.Names[j]
 
 				obj := pass.TypesInfo.ObjectOf(ident)
@@ -55,14 +56,14 @@ func run(pass *analysis.Pass) (any, error) {
 						pass.Reportf(
 							obj.Pos(),
 							"%s args of func '%s' is context.Context, and its name should be 'ctx'",
-							positionText(i+1), f.Name,
+							ordinal(index), f.Name,
 						)
 					}
 					if i != 0 {
 						pass.Reportf(
 							obj.Pos(),
 							"%s args of func '%s' is context.Context, and it should be first arg",
-							positionText(i+1), f.Name,
+							ordinal(index), f.Name,
 						)
 					}
 				}
@@ -73,22 +74,20 @@ func run(pass *analysis.Pass) (any, error) {
 	return nil, nil
 }
 
-func positionText(index int) string {
-	indexStr := strconv.Itoa(index)
-	var first string
-	if len(indexStr) == 1 {
-		first = indexStr
-	} else {
-		first = strings.Split(indexStr, "")[0]
+func ordinal(n int) string {
+	i := n % 100
+	if i == 11 || i == 12 || i == 13 {
+		return strconv.Itoa(n) + "th"
 	}
-	switch first {
-	case "1":
-		return indexStr + "st"
-	case "2":
-		return indexStr + "nd"
-	case "3":
-		return indexStr + "rd"
+
+	switch n % 10 {
+	case 1:
+		return strconv.Itoa(n) + "st"
+	case 2:
+		return strconv.Itoa(n) + "nd"
+	case 3:
+		return strconv.Itoa(n) + "rd"
 	default:
-		return indexStr + "th"
+		return strconv.Itoa(n) + "th"
 	}
 }
