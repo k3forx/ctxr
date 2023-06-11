@@ -35,10 +35,7 @@ func run(pass *analysis.Pass) (any, error) {
 	}
 
 	inspect.Preorder(nodeFilter, func(n ast.Node) {
-		f, ok := n.(*ast.FuncDecl)
-		if !ok {
-			return
-		}
+		f, _ := n.(*ast.FuncDecl)
 
 		var index int
 		for i, p := range f.Type.Params.List {
@@ -52,7 +49,7 @@ func run(pass *analysis.Pass) (any, error) {
 				}
 
 				if types.Identical(obj.Type(), ctxObj.Type()) {
-					if ident.Name != "ctx" {
+					if ident.Name != "ctx" && ident.Name != "_" {
 						pass.Reportf(
 							obj.Pos(),
 							"%s args of func '%s' is context.Context, and its name should be 'ctx'",
